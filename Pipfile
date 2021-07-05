@@ -9,6 +9,7 @@ name = "pypi"
 pytest = "*"
 black = "*"
 flake8 = "*"
+isort = "*"
 
 [requires]
 python_version = "3.9"
