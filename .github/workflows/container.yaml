@@ -1,0 +1,15 @@
+name: Build and Push Container Images
+on: [push]
+env:
+  ARTIFACT_REGISTRY: ${{ secrets.GCP_ARTIFACT_REGISTRY }}
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker "$(echo "$ARTIFACT_REGISTRY" | awk -F/ '{print $1}')"
+      - run: ./scripts/build_containers.sh
