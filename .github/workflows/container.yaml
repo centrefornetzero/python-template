@@ -12,4 +12,17 @@ jobs:
           service_account_key: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA_KEY }}
           export_default_credentials: true
       - run: gcloud auth configure-docker "$(echo "$ARTIFACT_REGISTRY" | awk -F/ '{print $1}')"
-      - run: ./scripts/build_containers.sh
+      - run: docker buildx install
+      - name: Build images
+        run: |
+          docker build . --target runtime -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
+          docker build . --target testrunner -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner
+      - name: Push images
+        run: |
+          docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
+          docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner
+      - name: Tag latest runtime image
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          gcloud artifacts docker tags add "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA" \
+            "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest
