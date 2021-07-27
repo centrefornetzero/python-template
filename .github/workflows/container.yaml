@@ -10,7 +10,6 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v0.2.0
         with:
           service_account_key: ${{ secrets.GCP_ARTIFACT_REGISTRY_SA_KEY }}
-          export_default_credentials: true
       - run: gcloud auth configure-docker "$(echo "$ARTIFACT_REGISTRY" | awk -F/ '{print $1}')"
       - run: docker buildx install
       - name: Build images
