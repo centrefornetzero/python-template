@@ -15,14 +15,22 @@ jobs:
       - run: docker buildx install
       - name: Build images
         run: |
-          docker build . --target runtime -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
-          docker build . --target testrunner -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner
+          docker build . --target runtime \
+            -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA" \
+            --cache-from "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1
+          docker build . --target testrunner \
+            -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner \
+            --cache-from "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest-testrunner \
+            --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Push images
         run: |
           docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
           docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner
-      - name: Tag latest runtime image
+      - name: Tag latest images
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           gcloud artifacts docker tags add "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA" \
             "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest
+          gcloud artifacts docker tags add "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner \
+            "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest-testrunner
