@@ -1,9 +1,9 @@
-name: Build and Push Container Images
+name: Containers
 on: [push]
 env:
   ARTIFACT_REGISTRY: ${{ secrets.GCP_ARTIFACT_REGISTRY }}
 jobs:
-  build-and-push:
+  build-test-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +22,10 @@ jobs:
             -t "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner \
             --cache-from "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":latest-testrunner \
             --build-arg BUILDKIT_INLINE_CACHE=1
+      - name: Run pytest
+        run: docker run "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner pytest
+      - name: Check formatting
+        run: docker run "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner ./scripts/format_check.sh
       - name: Push images
         run: |
           docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
