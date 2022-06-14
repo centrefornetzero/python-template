@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pre-commit = "*"
+
 
 [dev-packages]
 pytest = "*"
@@ -12,6 +12,7 @@ black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.9"
