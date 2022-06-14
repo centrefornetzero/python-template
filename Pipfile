@@ -5,12 +5,14 @@ name = "pypi"
 
 [packages]
 
+
 [dev-packages]
 pytest = "*"
 black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.9"
