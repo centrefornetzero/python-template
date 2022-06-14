@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pre-commit = "*"
 
 [dev-packages]
 pytest = "*"
