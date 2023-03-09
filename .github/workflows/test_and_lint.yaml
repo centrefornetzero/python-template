@@ -18,5 +18,12 @@ jobs:
           path: ~/.local/share/virtualenvs/
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - run: pipenv sync --dev
+      # - run: pipenv run ./scripts/format_check.sh
+      - name: Cache Pre-commit for format checking
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+      - name: Check formatting
+        run: pipenv run pre-commit run --all-files --show-diff-on-failure
       - run: pipenv run pytest
-      - run: pipenv run ./scripts/format_check.sh
