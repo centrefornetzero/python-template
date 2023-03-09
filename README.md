@@ -27,6 +27,11 @@ If you want to use the Docker workflow, you need to set the following secrets:
 You need to [set up your Python environment](https://docs.google.com/document/d/1Tg0eKalqOp-IJEeH7aShc9fYF5zn95H6jxEk25BLLUE/) first.
 
 1. Clone this repo.
-2. `pipenv sync --dev` to install dependencies.
-3. `cp .env.template .env` and fill in any blanks.
-4. `pipenv run pytest`
+2. Run `make setup` in your terminal.
+
+In step 2 this will:
+
+* Run `pipenv sync --dev` to install dependencies.
+* `cp .env.template .env` to create your local `.env` file - make sure you fill in any blanks.
+* Install your local pre-commit environment which will be used to maintain code standards
+* Check the tests work by running `pipenv run pytest`
