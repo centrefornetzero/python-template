@@ -1,9 +1,9 @@
-name: Test and lint
+name: Lint and test
 on: [push]
 env:
   PYTHONPATH: .
 jobs:
-  test_and_lint:
+  lint_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
