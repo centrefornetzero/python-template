@@ -25,7 +25,7 @@ jobs:
       - name: Run pytest
         run: docker run "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner pytest
       - name: Check formatting
-        run: docker run "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner pre-commit run --all-files
+        run: docker run "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"-testrunner pre-commit run --all-files --show-diff-on-failure
       - name: Push images
         run: |
           docker push "$ARTIFACT_REGISTRY"/docker/"${GITHUB_REPOSITORY#*/}":"$GITHUB_SHA"
