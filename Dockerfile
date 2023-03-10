@@ -1,6 +1,7 @@
 FROM python:3.9.6-slim-buster AS dependencies
 
 RUN apt-get update && apt-get -y upgrade
+RUN apt-get install -y git
 
 RUN pip install pipenv
 ENV PIPENV_VENV_IN_PROJECT=1
@@ -26,4 +27,5 @@ FROM dependencies AS testrunner
 RUN pipenv sync --keep-outdated --dev
 ENV PYTEST_ADDOPTS="-p no:cacheprovider"
 COPY --chown=user . .
+RUN git init . && pipenv run pre-commit install-hooks
 CMD ["pytest"]
