@@ -11,7 +11,7 @@ USER user
 WORKDIR /home/user/src
 
 COPY --chown=user Pipfile* .
-RUN pipenv sync --keep-outdated
+RUN pipenv sync
 ENV PATH="/home/user/src/.venv/bin:$PATH"
 ENV PYTHONPATH=.
 
