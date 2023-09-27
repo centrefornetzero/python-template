@@ -24,7 +24,7 @@ ENTRYPOINT ["python", "-m", "app"]
 
 FROM dependencies AS testrunner
 
-RUN pipenv sync --keep-outdated --dev
+RUN pipenv sync --dev
 ENV PYTEST_ADDOPTS="-p no:cacheprovider"
 COPY --chown=user . .
 RUN git init . && pipenv run pre-commit install-hooks
