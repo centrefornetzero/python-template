@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim-buster AS dependencies
+FROM python:3.11.4-slim-buster AS dependencies
 
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y git
